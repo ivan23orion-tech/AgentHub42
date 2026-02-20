@@ -51,6 +51,10 @@
 <h2>Criar nova tarefa</h2>
 <form id="taskForm">
   <label>
+    Título:<br>
+    <input type="text" id="title" required />
+  </label>
+  <label>
     Descrição:<br>
     <input type="text" id="description" required />
   </label>
@@ -58,15 +62,21 @@
     Preço (em USDC):<br>
     <input type="number" id="price" step="0.01" min="0" required />
   </label>
+  <label>
+    Token (ex.: usdt, usdc, btc):<br>
+    <input type="text" id="token" value="usdc" required />
+  </label>
   <button type="submit">Cadastrar tarefa</button>
 </form>
 
 <h2>Tarefas disponíveis</h2>
-<div id=taskList
+<div id="taskList"></div>
+
 <script>
   // Substitua este endereço pelo URL público da sua API FastAPI no Replit.
-  const apiBase = 'https://aeefd5b3-cc96-4016-9c04-62ec97eb481e-00-39xsq8gdb2hmi.worf.replit.dev';
-  
+  const apiBase = 'https://aeedf5b3-cc96-4016-9c04-62ec97eb481e-00-39xsq8gdb2hmi.worf.replit.dev';
+
+  async function fetchTasks() {
     try {
       const resp = await fetch(apiBase + '/tasks');
       if (!resp.ok) {
@@ -79,7 +89,12 @@
       tasks.forEach(task => {
         const div = document.createElement('div');
         div.className = 'task';
-        div.innerHTML = `<strong>${task.description}</strong><br>Preço: ${task.price}<br>Status: ${task.status}`;
+        div.innerHTML = `<strong>${task.title}</strong><br>` +
+                        `<em>${task.description}</em><br>` +
+                        `Preço: ${task.price} ${task.token.toUpperCase()}<br>` +
+                        `Status do pagamento: ${task.payment_status || 'n/a'}<br>` +
+                        `Endereço para pagamento: ${task.pay_address || 'n/a'}<br>` +
+                        `Resolvido: ${task.solved ? 'Sim' : 'Não'}`;
         list.appendChild(div);
       });
     } catch (err) {
@@ -89,13 +104,15 @@
 
   document.getElementById('taskForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const price = parseFloat(document.getElementById('price').value);
+    const token = document.getElementById('token').value;
     try {
       await fetch(apiBase + '/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description, price })
+        body: JSON.stringify({ title, description, price, token })
       });
       fetchTasks();
       e.target.reset();
