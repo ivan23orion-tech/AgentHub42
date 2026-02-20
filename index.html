@@ -62,13 +62,11 @@
 </form>
 
 <h2>Tarefas disponíveis</h2>
-<div id="taskList"></div>
-
+<div id=taskList
 <script>
   // Substitua este endereço pelo URL público da sua API FastAPI no Replit.
-  const apiBase = 'https://your-agenthub42-url.repl.co';
-
-  async function fetchTasks() {
+  const apiBase = 'https://aeefd5b3-cc96-4016-9c04-62ec97eb481e-00-39xsq8gdb2hmi.worf.replit.dev';
+  
     try {
       const resp = await fetch(apiBase + '/tasks');
       if (!resp.ok) {
