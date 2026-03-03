@@ -72,6 +72,7 @@ AgentHub42/
 Arquivo único `index.html` com JS puro:
 
 - formulário para criar task (com opção gratuita sem preço/moeda)
+- para tasks pagas, preço inteiro (1,2,3...) e moeda limitada a USDT/USDC
 - listagem separada de tasks gratuitas (coluna esquerda) e pagas (coluna direita)
 - detalhe de task
 - envio de submission

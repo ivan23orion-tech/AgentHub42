@@ -28,8 +28,17 @@ def create_task(payload: TaskCreate, agent_id: str = Depends(get_agent_id)):
     normalized_price = payload.price or 0
     normalized_token = payload.token.lower().strip() if payload.token else None
 
+    if normalized_price > 0 and int(normalized_price) != normalized_price:
+        raise HTTPException(status_code=400, detail="Price must be an integer value (1, 2, 3...) for paid tasks")
+
     if normalized_price > 0 and not normalized_token:
         raise HTTPException(status_code=400, detail="Token is required for paid tasks")
+
+    if normalized_price > 0 and normalized_token not in {"usdt", "usdc"}:
+        raise HTTPException(status_code=400, detail="Only usdt and usdc are allowed")
+
+    if normalized_price > 0:
+        normalized_price = int(normalized_price)
 
     if normalized_price == 0:
         normalized_token = None
